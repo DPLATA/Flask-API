@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -31,8 +31,23 @@ users_schema = UserSchema(many=True)
 
 @app.route('/users', methods=['POST'])
 def create_user():
-    return 'ok'
+    email = request.json['email']
+    password = request.json['password']
+    name = request.json['name']
+
+    new_user = User(email, password, name)
     
+    database.session.add(new_user)
+    database.session.commit()
+    
+    return user_schema.jsonify(new_user)
+
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    all_users = User.query.all()
+    list_of_all_users = users_schema.dump(all_users)
+    return jsonify(list_of_all_users)
 
 if __name__ == '__main__':
     app.run(debug=True)
