@@ -15,6 +15,7 @@ class User(Base):
     email = database.Column(database.String(35), unique=True, nullable=False)
     password = database.Column(database.String(60), nullable=False)
     name = database.Column(database.String(80), nullable=False)
+    # TODO: addresses = database.relationship('Address', backpopulates='user')
 
     def __init__(self, email, password, name):
         self.email = email
@@ -36,7 +37,7 @@ class Address(Base):
     state = database.Column(database.String(80))
     country = database.Column(database.String(20), nullable=False)
     user_id = database.Column(database.Integer, database.ForeignKey('user.id'))
-    # TODO: backpopulate array of addresses user = database.relationship('User', back_populates='address')
+    # TODO: user = database.relationship('User', back_populates='address')
 
     def __init__(self, zip_code, municipality, city, state, country, user_id):
         self.zip_code = zip_code
